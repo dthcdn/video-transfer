@@ -1,6 +1,7 @@
 ## Requirements
 - Python 3
 - Python package: pycrypto, requests, boto3
+- ffpmeg & ffprobe
 
 ## Example
 
