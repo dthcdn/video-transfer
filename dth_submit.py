@@ -283,3 +283,4 @@ def exec(input, preset):
 
   id = upload(conf, os.path.splitext(os.path.basename(transcodedOutput))[0], transcodedOutput, transcodedResolutions)
   print("[Done]%s"%id)
+  return id
