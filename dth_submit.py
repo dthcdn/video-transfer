@@ -278,5 +278,6 @@ def exec(input, preset):
   transcodedOutput, transcodedResolutions = transcode(inputFile, resolutions, outputPath, {
     "upscale": transcodeConfig["upscale"] if "upscale" in transcodeConfig else False
   })
+
   upload(conf, os.path.splitext(os.path.basename(transcodedOutput))[0], transcodedOutput, transcodedResolutions)
 
