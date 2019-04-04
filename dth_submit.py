@@ -150,7 +150,9 @@ def transcodeParams(inputVideoMeta, resolutions, outputPath):
 def requestApiId(host, domain, apiKey, name):
   t=epoch()
   sign = hash("{}-{}-{}-{}".format(domain, apiKey, name, t))
-  r = requests.post("%s/init?domain=video.popsww.com&name=%s&t=%ld&sign=%s"%(host, name, t, sign))
+  r = requests.post("%s/newVideo?domain=%s&name=%s&t=%ld&sig=%s"%(host, domain, name, t, sign))
+  r.raise_for_status()
+
   jsonObj = json.loads(r.text)
   pStorage = jsonObj["storage"]
   if (pStorage["type"] == "s3"):
@@ -276,6 +278,5 @@ def exec(input, preset):
   transcodedOutput, transcodedResolutions = transcode(inputFile, resolutions, outputPath, {
     "upscale": transcodeConfig["upscale"] if "upscale" in transcodeConfig else False
   })
-
   upload(conf, os.path.splitext(os.path.basename(transcodedOutput))[0], transcodedOutput, transcodedResolutions)
 
