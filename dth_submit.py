@@ -191,7 +191,7 @@ def upload(cfn, originalName, path, resolutions):
     for v in resolutions:
       rf = RENDITIONS["{}p".format(v)]
       smil += '<video src="{}.mp4" system-bitrate="{}" width="{}" height="{}" systemLanguage="en"></video>'.format(v, rf['bitrate'] * 1000, rf['width'], rf['height'])
-      print("[Upload - {}] {}p ...".format(session["id"], v))
+      print("[Upload] {}p".format(v))
       filePath = "%s/%s.mp4"%(path, v)
       key = "%s/%s.mp4"%(session["id"], v)
       uploadS3(filePath, key, pStorage)
@@ -201,7 +201,9 @@ def upload(cfn, originalName, path, resolutions):
   smilFile = "%s/index.smil"%(path)
   with open(smilFile, "w") as file: 
     file.write(smil) 
+  print("[Upload] smil")
   uploadS3(smilFile, "%s/index.smil"%(session["id"]), pStorage)
+  return session["id"]
 
 def transcode(inputFile, resolutions, outputPath, opts):
   opts = opts if opts else {}
@@ -272,12 +274,12 @@ def exec(input, preset):
   if not isinstance(resolutions, list):
     raise ValueError(1002, 'Invalid input. Resolution must be an array')
     
-  print("[Transcoding] ...")  
+  print("[Transcoding]")  
   inputFile = inputFactory(conf["input"])
   outputPath = conf["output"] if "output" in conf else "."
   transcodedOutput, transcodedResolutions = transcode(inputFile, resolutions, outputPath, {
     "upscale": transcodeConfig["upscale"] if "upscale" in transcodeConfig else False
   })
 
-  upload(conf, os.path.splitext(os.path.basename(transcodedOutput))[0], transcodedOutput, transcodedResolutions)
-
+  id = upload(conf, os.path.splitext(os.path.basename(transcodedOutput))[0], transcodedOutput, transcodedResolutions)
+  print("[Done]%s"%id)
