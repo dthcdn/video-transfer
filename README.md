@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
 ## Running with docker
 ```
-docker run -v $(pwd):/project/video/ --env VIDEO=big_buck_bunny.mp4 -v $(pwd)/presets/default.json:/project/presets/default.json rickyngk/dth-video-transfer:v0.1
+docker run -v $(pwd):/project/video/ --env VIDEO=big_buck_bunny.mp4 -v $(pwd)/presets/default.json:/project/presets/default.json rickyngk/dth-video-transfer:v0.2
 ```
 
 Replace 
