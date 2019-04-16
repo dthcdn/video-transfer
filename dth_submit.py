@@ -161,6 +161,17 @@ def requestApiId(host, domain, apiKey, name):
         pStorage[key] = decrypt(pStorage[key], apiKey, jsonObj["sessionId"])
   return jsonObj
 
+def requestCommit(host, domain, apiKey, callbackUrl, videoId):
+  t=epoch()
+  callbackUrl = re.sub(r"\{id\}", videoId, callbackUrl)
+  callbackUrl = b64encode(callbackUrl.encode('utf-8')).decode('utf-8')
+  callbackUrl = re.sub(r"\/", "_", callbackUrl)
+  callbackUrl = re.sub(r"=", "-", callbackUrl)
+  sign = hash("{}-{}-{}-{}".format(domain, apiKey, callbackUrl, t))
+  r = requests.post("%s/commit?domain=%s&callbackUrl=%s&t=%ld&sig=%s"%(host, domain, callbackUrl, t, sign))
+  r.raise_for_status()
+  return True
+
 def uploadS3(inputFile, key, cfn):
   regionName = cfn["region_name"]
   bucketName = cfn["bucket"]
@@ -182,9 +193,9 @@ def uploadS3(inputFile, key, cfn):
 def upload(cfn, originalName, path, resolutions):
   host = cfn["api"]["host"]
   domain = cfn["api"]["domain"]
-  key = cfn["api"]["key"]
+  apikey = cfn["api"]["key"]
 
-  session = requestApiId(host, domain, key, originalName)
+  session = requestApiId(host, domain, apikey, originalName)
   smil = '<?xml version="1.0" encoding="UTF-8"?><smil title=""><body><switch>'
   pStorage = session["storage"]
   if (pStorage["type"] == "s3"):
@@ -203,6 +214,8 @@ def upload(cfn, originalName, path, resolutions):
     file.write(smil) 
   print("[Upload] smil")
   uploadS3(smilFile, "%s/index.smil"%(session["id"]), pStorage)
+  if "callback" in cfn["api"]:
+    requestCommit(host, domain, apikey, cfn["api"]["callback"], session["id"])
   return session["id"]
 
 def transcode(inputFile, resolutions, outputPath, opts):
