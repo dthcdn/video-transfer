@@ -45,3 +45,10 @@ The video id is placed in the output:
 ```
 You can grep the id after `[Done]`. In this example, the video id is `j2--big_buck_bunny--1554404047711--1554404064855`
 
+## API Callback
+
+You can also get the video id result via api callback using preset:
+`api.callback`: `https://path/to/your/server/{id}`, for `{id}` is pattern that replaced by actual video id by this script.
+
+
+
