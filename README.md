@@ -62,4 +62,6 @@ http://<dth-cdn-api-url>:<port>/getStreamingUrl?domain=<domain>&cdn=<provided-cd
 - `cdn`: cdn profile code, provided by DTH
 - `id`: video id
 - `t`: epoch in milis
-- `sig`: Signature, using provided formular to verify the request
+- `sig`: Signature. sha256(domain, api-key, cdn, id, t)
+- `api-key`: secret API key provided by DT
+
