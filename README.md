@@ -50,5 +50,16 @@ You can grep the id after `[Done]`. In this example, the video id is `j2--big_bu
 You can also get the video id result via api callback using preset:
 `api.callback`: `https://path/to/your/server/{id}`, for `{id}` is pattern that replaced by actual video id by this script.
 
+## Get streaming URL
 
+User can get actual streaming URL by using API:
 
+```
+http://<dth-cdn-api-url>:<port>/getStreamingUrl?domain=<domain>&cdn=<provided-cdn-code>&id=<video-id>&t=<epoch>&sig=<signature>
+```
+
+- `domain`: streaming domain, provided by DTH
+- `cdn`: cdn profile code, provided by DTH
+- `id`: video id
+- `t`: epoch in milis
+- `sig`: Signature, using provided formular to verify the request
